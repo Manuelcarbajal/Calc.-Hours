@@ -9,7 +9,7 @@ const Table = () => {
   const localStorageData = JSON.parse(localStorage.getItem("table-key"));
 
   useEffect(() => {
-    setData(dataHours);
+    setData(localStorageData || dataHours);
   }, []);
 
   const onChange = (e, id) => {
