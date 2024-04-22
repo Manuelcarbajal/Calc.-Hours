@@ -6,6 +6,8 @@ const Table = () => {
   const elementRef = useRef(null);
   const [data, setData] = useState([]);
 
+  const localStorageData = JSON.parse(localStorage.getItem("table-key"));
+
   useEffect(() => {
     setData(dataHours);
   }, []);
@@ -20,6 +22,8 @@ const Table = () => {
 
       return day;
     });
+
+    localStorage.setItem("table-key", JSON.stringify(newData));
 
     setData(newData);
   };
@@ -78,7 +82,7 @@ const Table = () => {
               </tr>
             </thead>
 
-            {data.map((data) => (
+            {(localStorageData || data).map((data) => (
               <tbody id="attendees-list" key={data.id}>
                 <tr>
                   <td className="border border-gray-300 px-4 py-2">
