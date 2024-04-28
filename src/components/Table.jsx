@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { dataHours } from "../data/weekdays";
 
-const Table = () => {
+const Table = ({ date, numWeek }) => {
   const elementRef = useRef(null);
   const [data, setData] = useState([]);
 
@@ -26,6 +26,22 @@ const Table = () => {
     localStorage.setItem("table-key", JSON.stringify(newData));
 
     setData(newData);
+  };
+
+  const handelRestore = (day, id) => {
+    if (confirm(`Do you want to reset the day ${day}? `)) {
+      const newData = data.map((day) => {
+        if (day.id === id) {
+          return { ...day, hour: 0, description: "" };
+        }
+
+        return day;
+      });
+
+      localStorage.setItem("table-key", JSON.stringify(newData));
+
+      setData(newData);
+    }
   };
 
   const total = () => {
@@ -53,19 +69,36 @@ const Table = () => {
       });
   };
 
+  Date.prototype.getWeekNumber = function (deductWeek = null) {
+    let d = new Date(+this); //Creamos un nuevo Date con la fecha de "this".
+
+    if (deductWeek) {
+      d.setDate(d.getDate() - deductWeek * 7);
+    }
+
+    d.setHours(0, 0, 0, 0); //Nos aseguramos de limpiar la hora.
+    d.setDate(d.getDate() + 4 - (d.getDay() || 7)); // Recorremos los días para asegurarnos de estar "dentro de la semana"
+    //Finalmente, calculamos redondeando y ajustando por la naturaleza de los números en JS:
+    return Math.ceil(((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7 + 1) / 7);
+  };
+
   return (
     <div className="w-full ">
       <div className="bg-slate-400" ref={elementRef}>
-        <div className="flex">
-          <h1 className="text-3xl font-bold mb-4 w-full">
-            Work Hours Calculator
-          </h1>
+        <div className="flex justify-center m-2">
+          <h4 className="text-gray-900 text-2xl font-semibold mr-4">
+            Week #
+            <span className="text-blue-700">{date.getWeekNumber(numWeek)}</span>
+          </h4>
+          <h4 className="text-gray-900 text-2xl font-semibold">
+            Year: <span className="text-blue-700">{date.getFullYear()}</span>
+          </h4>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300">
+          <table className="w-full border-collapse border border-gray-100">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-100">
                 <th className="border-y border-gray-100 bg-gray-50/50 p-2">
                   Days
                 </th>
@@ -114,7 +147,10 @@ const Table = () => {
                   </td>
 
                   <td className="border border-gray-300 px-4 py-2">
-                    <button className="p-2 text-red-600">
+                    <button
+                      onClick={() => handelRestore(data.day, data.id)}
+                      className="p-2 text-red-600"
+                    >
                       <svg
                         className="w-6 h-6"
                         stroke="currentColor"
@@ -131,19 +167,18 @@ const Table = () => {
             ))}
           </table>
         </div>
-        <div className="flex w-2/3 justify-center mx-auto mt-8">
-          <div className="flex w-full justify-center">
+
+        <div className="flex w-2/3 justify-center mx-auto mt-1">
+          <div className="flex justify-center">
             <div className="col-span-9 sm:col-span-6 md:col-span-3">
               <div className="flex flex-row bg-slate-50 shadow-sm rounded p-2 m-1">
-                <div className="flex flex-col flex-grow ml-4">
+                <div className="flex flex-col">
                   <div className="text-sm text-black-500">Total Hours</div>
                   <div className="font-bold text-lg">{total()} hrs</div>
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="flex w-full justify-end"></div>
         </div>
       </div>
 
@@ -155,15 +190,6 @@ const Table = () => {
             onClick={htmlToImageConvert}
           >
             Export Image JPG
-          </button>
-        </div>
-
-        <div>
-          <button
-            className="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-2 px-4 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none flex items-center gap-3 mt-4 m-1"
-            type="button"
-          >
-            Export Pdf
           </button>
         </div>
       </div>
