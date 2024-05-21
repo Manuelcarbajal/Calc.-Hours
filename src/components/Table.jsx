@@ -2,15 +2,58 @@ import { useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { dataHours } from "../data/weekdays";
 
-const Table = ({ date, numWeek }) => {
+const apiSlackBot = import.meta.env.VITE_SLACK_BOT;
+
+const Table = ({ date = "", numWeek = null }) => {
   const elementRef = useRef(null);
   const [data, setData] = useState([]);
 
-  const localStorageData = JSON.parse(localStorage.getItem("table-key"));
+  console.log(apiSlackBot);
 
+  const localStorageData = JSON.parse(localStorage.getItem("table-key"));
+  // /
   useEffect(() => {
     setData(localStorageData || dataHours);
   }, []);
+
+  const service = async (file, threadId, channelId, initialComment) => {
+    console.log(file);
+    console.log(threadId);
+    console.log(channelId);
+    console.log(initialComment);
+
+    const formData = new FormData();
+    formData.append(
+      "file",
+      file,
+      `week#${date.getWeekNumber(numWeek)}-${date.getFullYear()}`
+    );
+    formData.append("threadId", threadId);
+    formData.append("channelId", channelId);
+    formData.append("initial_comment", initialComment);
+
+    const url = `${apiSlackBot}/api/slackbot/uplaodimage`;
+    const options = {
+      method: "POST",
+      body: formData,
+    };
+    const response = await fetch(url, options);
+
+    console.log(response);
+  };
+
+  Date.prototype.getWeekNumber = function (deductWeek = null) {
+    let d = new Date(+this); //Creamos un nuevo Date con la fecha de "this".
+
+    if (deductWeek) {
+      d.setDate(d.getDate() - deductWeek * 7);
+    }
+
+    d.setHours(0, 0, 0, 0); //Nos aseguramos de limpiar la hora.
+    d.setDate(d.getDate() + 4 - (d.getDay() || 7)); // Recorremos los días para asegurarnos de estar "dentro de la semana"
+    //Finalmente, calculamos redondeando y ajustando por la naturaleza de los números en JS:
+    return Math.ceil(((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7 + 1) / 7);
+  };
 
   const onChange = (e, id) => {
     const { value, name } = e.target;
@@ -56,30 +99,52 @@ const Table = ({ date, numWeek }) => {
     return 0;
   };
 
-  const htmlToImageConvert = () => {
-    toPng(elementRef.current, { cacheBust: false })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "table-hours.png";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
+  const htmlToImageConvert = async () => {
+    if (
+      confirm(
+        `Dowload image week-#${date.getWeekNumber(
+          numWeek
+        )}-${date.getFullYear()}.png?`
+      )
+    ) {
+      const dataUrl = await toPng(elementRef.current, {
+        quality: 0.95,
+        cacheBust: false,
       });
+      console.log("Data URL length:", dataUrl.length);
+
+      console.log(dataUrlToBlob(dataUrl, "hola"));
+
+      const blob = dataUrlToBlob(dataUrl);
+
+      await service(blob, "#varios", "C072LTZKYA2", "Hola");
+    }
   };
 
-  Date.prototype.getWeekNumber = function (deductWeek = null) {
-    let d = new Date(+this); //Creamos un nuevo Date con la fecha de "this".
+  //usar preview de iamgen
+  // const blobToImage = (blob) => {
+  //   return new Promise((resolve) => {
+  //     const url = URL.createObjectURL(blob);
+  //     let img = new Image();
+  //     img.onload = () => {
+  //       URL.revokeObjectURL(url);
+  //       resolve(img);
+  //     };
+  //     img.src = url;
+  //   });
+  // };
 
-    if (deductWeek) {
-      d.setDate(d.getDate() - deductWeek * 7);
+  const dataUrlToBlob = (dataUrl) => {
+    const byteString = atob(dataUrl.split(",")[1]);
+    const mimeString = dataUrl.split(",")[0].split(":")[1].split(";")[0];
+
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
     }
 
-    d.setHours(0, 0, 0, 0); //Nos aseguramos de limpiar la hora.
-    d.setDate(d.getDate() + 4 - (d.getDay() || 7)); // Recorremos los días para asegurarnos de estar "dentro de la semana"
-    //Finalmente, calculamos redondeando y ajustando por la naturaleza de los números en JS:
-    return Math.ceil(((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7 + 1) / 7);
+    return new Blob([ab], { type: mimeString });
   };
 
   return (
