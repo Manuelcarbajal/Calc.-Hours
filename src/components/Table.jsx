@@ -88,7 +88,7 @@ const Table = ({ date = "", numWeek = null }) => {
   };
 
   const total = () => {
-    const map = data.map((data) => parseInt(data.hour));
+    const map = (localStorageData || data).map((data) => parseInt(data.hour));
     const filter = map.filter(Boolean);
     const reduceSuma = filter.reduce((a, b) => a + b, 0);
 
