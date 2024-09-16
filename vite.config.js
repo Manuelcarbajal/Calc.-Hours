@@ -10,22 +10,22 @@ export default defineConfig({
       // generates 'manifest.webmanifest' file on build
       manifest: {
         // caches the assets/icons mentioned (assets/* includes all the assets present in your src/ directory)
-        includeAssets: ["hour-svg.svg", "hour-svg.svg", "assets/*"],
+        includeAssets: ["hour-svg.svg", "assets/*"],
         name: "Calc.Hours CH",
         short_name: "CH",
         start_url: "/",
-        background_color: "grey",
+        background_color: "#808080",
         theme_color: "#000000",
         icons: [
           {
-            src: "/public/hour-svg.svg",
+            src: "hour-svg.svg",
             sizes: "192x192",
-            type: "image/png",
+            type: "image/svg+xml",
           },
           {
-            src: "/public/hour-svg.svg",
+            src: "hour-svg.svg",
             sizes: "512x512",
-            type: "image/png",
+            type: "image/svg+xml",
           },
         ],
       },
