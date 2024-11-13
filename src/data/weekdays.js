@@ -2,6 +2,7 @@ export const dataHours = [
   {
     id: 1,
     day: "Monday",
+    date: null,
     hour: {
       hours: 0,
       minutes: 0,
@@ -11,6 +12,7 @@ export const dataHours = [
   {
     id: 2,
     day: "Tuesday",
+    date: null,
     hour: {
       hours: 0,
       minutes: 0,
@@ -20,6 +22,7 @@ export const dataHours = [
   {
     id: 3,
     day: "Wednesday",
+    date: null,
     hour: {
       hours: 0,
       minutes: 0,
@@ -29,6 +32,7 @@ export const dataHours = [
   {
     id: 4,
     day: "Thursday",
+    date: null,
     hour: {
       hours: 0,
       minutes: 0,
@@ -38,6 +42,7 @@ export const dataHours = [
   {
     id: 5,
     day: "Friday",
+    date: null,
     hour: {
       hours: 0,
       minutes: 0,
@@ -47,6 +52,7 @@ export const dataHours = [
   {
     id: 6,
     day: "Saturday",
+    date: null,
     hour: {
       hours: 0,
       minutes: 0,
@@ -56,6 +62,7 @@ export const dataHours = [
   {
     id: 7,
     day: "Sunday",
+    date: null,
     hour: {
       hours: 0,
       minutes: 0,

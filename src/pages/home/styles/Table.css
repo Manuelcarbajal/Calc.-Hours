@@ -1,0 +1,97 @@
+.container {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.header {
+  background-color: #94a3b8;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px;
+}
+
+.week-year {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.week-number,
+.year {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.highlight {
+  color: #1d4ed8;
+}
+
+.total-hours {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-right: 30px;
+}
+
+.hours-label {
+  font-size: 1.2rem;
+  color: #393a3b;
+  font-weight: 600;
+}
+
+.hours-value {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d1d5db;
+}
+
+.table-header {
+  background-color: #f3f4f6;
+}
+
+.table-heading {
+  border: 1px solid #d1d5db;
+  background-color: rgba(249, 250, 251, 0.5);
+  padding: 0.5rem;
+}
+
+.table-cell {
+  border: 1px solid #d1d5db;
+}
+
+.description {
+  padding: 4px;
+}
+
+.description-input {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  resize: none;
+  width: 100%;
+}
+
+.action .delete-button {
+  padding: 0.5rem;
+  color: #dc2626;
+}
+
+.delete-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+}

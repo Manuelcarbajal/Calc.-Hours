@@ -3,10 +3,12 @@ import { dataHours } from "../../../data/weekdays";
 import InputHours from "./InputHours";
 import { getWeekNumber } from "../../../components/date/getWeekNumber";
 
-const Table = ({ date, numWeek, elementRef }) => {
-  const [data, setData] = useState([]);
+import "../styles/Table.css";
 
+const Table = ({ date, numWeek, elementRef }) => {
   const localStorageData = JSON.parse(localStorage.getItem("table-key"));
+
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     setData(localStorageData || dataHours);
@@ -46,7 +48,6 @@ const Table = ({ date, numWeek, elementRef }) => {
       });
 
       localStorage.setItem("table-key", JSON.stringify(newData));
-
       setData(newData);
     }
   };
@@ -69,91 +70,82 @@ const Table = ({ date, numWeek, elementRef }) => {
   };
 
   return (
-    <div className="w-full ">
-      <div className="bg-slate-400" ref={elementRef}>
-        <div className="flex flex-col items-center m-4 space-y-4">
-          <div className="flex justify-center items-center space-x-6">
-            <h4 className="text-gray-900 text-2xl font-semibold">
-              Week #
-              <span className="text-blue-700">
-                {getWeekNumber(date, numWeek)}
-              </span>
-            </h4>
-            <h4 className="text-gray-900 text-2xl font-semibold">
-              Year: <span className="text-blue-700">{date.getFullYear()}</span>
-            </h4>
+    <>
+      <div className="container">
+        <div className="header" ref={elementRef}>
+          <div className="header-content">
+            <div className="total-hours">
+              <div className="hours-label">Total Hours: </div>
+              <div className="hours-value">{total()}</div>
+            </div>
+            <div className="week-year">
+              <h4 className="week-number">
+                Week #
+                <span className="highlight">
+                  {getWeekNumber(date, numWeek)}
+                </span>
+              </h4>
+              <h4 className="year">
+                Year: <span className="highlight">{date.getFullYear()}</span>
+              </h4>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <div className="text-sm text-gray-500">Total Hours</div>
-            <div className="font-bold text-lg">{total()}</div>
-          </div>
-        </div>
+          <div className="table-container">
+            <table className="data-table">
+              <thead>
+                <tr className="table-header">
+                  <th className="table-heading">Hours</th>
+                  <th className="table-heading">Days</th>
+                  <th className="table-heading">Date</th>
 
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-100">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border-y border-gray-100 bg-gray-50/50 p-2">
-                  Days
-                </th>
-                <th className="border-y border-gray-100 bg-gray-50/50 p-2">
-                  Hours
-                </th>
-                <th className="border-y border-gray-100 bg-gray-50/50 p-2">
-                  Shoort description
-                </th>
-
-                <th className="border-y border-gray-100 bg-gray-50/50 p-2">
-                  Action
-                </th>
-              </tr>
-            </thead>
-
-            {(localStorageData || data).map((day) => (
-              <tbody id="attendees-list" key={day.id}>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {day.day}
-                  </td>
-
-                  <td className="border border-gray-300 px-4 py-2">
-                    <InputHours data={data} setData={setData} day={day} />
-                  </td>
-
-                  <td className="border border-gray-300 px-4 py-2">
-                    <textarea
-                      name="description"
-                      value={day.description}
-                      className="p-2 rounded border attendees-count resize-none wi w-full h-32"
-                      placeholder="Write your thoughts here..."
-                      onChange={(e) => onChange(e, day.id)}
-                    />
-                  </td>
-
-                  <td className="border border-gray-300 px-4 py-2">
-                    <button
-                      onClick={() => handelRestore(day.day, day.id)}
-                      className="p-2 text-red-600"
-                    >
-                      <svg
-                        className="w-6 h-6"
-                        stroke="currentColor"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z"></path>
-                      </svg>
-                    </button>
-                  </td>
+                  <th className="table-heading">Short Description</th>
+                  <th className="table-heading">Action</th>
                 </tr>
-              </tbody>
-            ))}
-          </table>
+              </thead>
+
+              {data.map((day) => (
+                <tbody id="attendees-list" key={day.id}>
+                  <tr>
+                    <td className="table-cell">
+                      <InputHours data={data} setData={setData} day={day} />
+                    </td>
+                    <td className="table-cell">{day.day}</td>
+                    <td className="table-cell">NOV/11/2024</td>
+
+                    <td className="table-cell description">
+                      <textarea
+                        name="description"
+                        value={day.description}
+                        className="description-input"
+                        placeholder="Write your thoughts here..."
+                        onChange={(e) => onChange(e, day.id)}
+                      />
+                    </td>
+                    <td className="table-cell action">
+                      <button
+                        onClick={() => handelRestore(day.day, day.id)}
+                        className="delete-button"
+                      >
+                        <svg
+                          className="delete-icon"
+                          stroke="currentColor"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z"></path>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
