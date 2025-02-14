@@ -24,6 +24,8 @@ const Table = ({ date }) => {
     localStorage.setItem("table-key", JSON.stringify(newData));
   };
 
+  //test
+
   useEffect(() => {
     if (!localStorageData) {
       console.log("no existe");
