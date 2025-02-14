@@ -7,8 +7,6 @@ const InputHours = ({ day, data, setData }) => {
     minutes: 0,
   });
 
-  console.log(data);
-
   useEffect(() => {
     setState({
       hours: day.hour.hours || 0,
@@ -18,7 +16,7 @@ const InputHours = ({ day, data, setData }) => {
 
   const regexHours = (element) => {
     let value = parseInt(element);
-    value = Math.max(0, Math.min(24, value));
+    value = Math.max(0, Math.min(23, value));
 
     return value;
   };
@@ -38,7 +36,7 @@ const InputHours = ({ day, data, setData }) => {
   const onChange = (e, id) => {
     const { value, name } = e.target;
 
-    const newData = data.map((day) => {
+    const newData = (data?.week || []).map((day) => {
       if (day.id === id) {
         return {
           ...day,
@@ -52,12 +50,13 @@ const InputHours = ({ day, data, setData }) => {
       return day;
     });
 
-    localStorage.setItem("table-key", JSON.stringify(newData));
-    // setState((prevState) => ({ ...prevState, [name]: value }));
-    setData(newData);
-  };
+    localStorage.setItem(
+      "table-key",
+      JSON.stringify({ ...data, week: newData })
+    );
 
-  console.log(state);
+    setData({ ...data, week: newData });
+  };
 
   return (
     <InputTimeContainer>
@@ -89,15 +88,13 @@ export default InputHours;
 const InputTimeContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 20px;
   justify-content: center;
 `;
 
 const InputTime = styled.input`
   width: 30%;
-  max-width: 200px;
-  padding: 10px;
+  max-width: 50px;
+  padding: 2px;
   font-size: 18px;
   text-align: center;
   border: 2px solid #ccc;
