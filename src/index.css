@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-primary: #da3654;
+  --color-text: #000;
+  --color-text-2: #3c4856c2;
+  --sb-width: 5rem;
+}
+
+@font-face {
+  font-family: "Recoleta";
+  src: url;
+}
+
+body {
+  margin: 0;
+  font: 100%/1.55 "poppins", sans-serif;
+  scroll-behavior: smooth;
+}
+
+:is(h1, h2, h3, h4) {
+  font-family: "Recoleta", "poppins";
+}
