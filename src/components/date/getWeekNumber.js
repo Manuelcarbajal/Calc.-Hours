@@ -1,12 +1,24 @@
-export const getWeekNumber = (date, deductWeek = null) => {
-  let d = new Date(date.getTime()); //Creamos un nuevo Date con la fecha de "this".
+export const getWeekNumber = (date, year = null) => {
+  let d = new Date(date.getTime()); // Creamos un nuevo Date con la fecha de "this".
 
-  if (deductWeek) {
-    d.setDate(d.getDate() - deductWeek * 7);
+  if (year) {
+    d.setFullYear(year);
   }
 
-  d.setHours(0, 0, 0, 0); //Nos aseguramos de limpiar la hora.
-  d.setDate(d.getDate() + 4 - (d.getDay() || 7)); // Recorremos los días para asegurarnos de estar "dentro de la semana"
-  //Finalmente, calculamos redondeando y ajustando por la naturaleza de los números en JS:
-  return Math.ceil(((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7 + 1) / 7);
+  const firstDayOfYear = new Date(d.getFullYear(), 0, 1);
+  const firstThursday = new Date(
+    d.getFullYear(),
+    0,
+    1 + ((4 - firstDayOfYear.getDay() + 7) % 7)
+  ); // Primer jueves del año
+
+  console.log(firstThursday);
+
+  // Calculamos la diferencia en días entre la fecha actual y el primer jueves.
+  const daysBetween = Math.floor((d - firstThursday) / (1000 * 60 * 60 * 24));
+
+  // La semana comienza en el primer lunes después del primer jueves
+  const weekNumber = Math.floor(daysBetween / 7 + 1);
+
+  return weekNumber;
 };

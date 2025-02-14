@@ -1,72 +1,76 @@
-export const dataHours = [
-  {
-    id: 1,
-    day: "Monday",
-    date: null,
-    hour: {
-      hours: 0,
-      minutes: 0,
+export const dataHours = {
+  year: null,
+  numWeek: null,
+  week: [
+    {
+      id: 1,
+      day: "Monday",
+      date: null,
+      hour: {
+        hours: 0,
+        minutes: 0,
+      },
+      description: "",
     },
-    description: "",
-  },
-  {
-    id: 2,
-    day: "Tuesday",
-    date: null,
-    hour: {
-      hours: 0,
-      minutes: 0,
+    {
+      id: 2,
+      day: "Tuesday",
+      date: null,
+      hour: {
+        hours: 0,
+        minutes: 0,
+      },
+      description: "",
     },
-    description: "",
-  },
-  {
-    id: 3,
-    day: "Wednesday",
-    date: null,
-    hour: {
-      hours: 0,
-      minutes: 0,
+    {
+      id: 3,
+      day: "Wednesday",
+      date: null,
+      hour: {
+        hours: 0,
+        minutes: 0,
+      },
+      description: "",
     },
-    description: "",
-  },
-  {
-    id: 4,
-    day: "Thursday",
-    date: null,
-    hour: {
-      hours: 0,
-      minutes: 0,
+    {
+      id: 4,
+      day: "Thursday",
+      date: null,
+      hour: {
+        hours: 0,
+        minutes: 0,
+      },
+      description: "",
     },
-    description: "",
-  },
-  {
-    id: 5,
-    day: "Friday",
-    date: null,
-    hour: {
-      hours: 0,
-      minutes: 0,
+    {
+      id: 5,
+      day: "Friday",
+      date: null,
+      hour: {
+        hours: 0,
+        minutes: 0,
+      },
+      description: "",
     },
-    description: "",
-  },
-  {
-    id: 6,
-    day: "Saturday",
-    date: null,
-    hour: {
-      hours: 0,
-      minutes: 0,
+    {
+      id: 6,
+      day: "Saturday",
+      date: null,
+      hour: {
+        hours: 0,
+        minutes: 0,
+      },
+      description: "",
     },
-    description: "",
-  },
-  {
-    id: 7,
-    day: "Sunday",
-    date: null,
-    hour: {
-      hours: 0,
-      minutes: 0,
+    {
+      id: 7,
+      day: "Sunday",
+      date: null,
+      hour: {
+        hours: 0,
+        minutes: 0,
+      },
+      description: "",
     },
-    description: "",
-  },
-];
+  ],
+};

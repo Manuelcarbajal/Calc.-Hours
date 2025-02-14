@@ -33,6 +33,24 @@
   color: #1d4ed8;
 }
 
+.highlight input {
+  height: 30px;
+  margin-left: 8px;
+  padding: 2px;
+}
+
+.highlight .fullYear {
+  width: 68px;
+  height: 30px;
+  margin-left: 8px;
+}
+
+.highlight .numWeek {
+  width: 42px;
+  height: 30px;
+  margin-left: 8px;
+}
+
 .total-hours {
   display: flex;
   align-items: center;
@@ -77,6 +95,20 @@
 
 .description {
   padding: 4px;
+}
+
+.table-date {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-date .day-label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.table-date .date-label {
+  font-size: 16px;
 }
 
 .description-input {

@@ -1,33 +1,38 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { format } from "date-fns";
+import { formateMDY } from "../utils/date/formateMDY.js";
 
 export const PdfGenerator = () => {
   const localStorageData = JSON.parse(localStorage.getItem("table-key"));
+
+  const { week, year, numWeek } = localStorageData;
 
   const total = () => {
     let totalHours = 0;
     let totalMinutes = 0;
 
-    localStorageData.map((data) => {
-      const { hours, minutes } = data.hour;
-      totalHours += parseInt(hours) || 0;
-      totalMinutes += parseInt(minutes) || 0;
-    });
+    if (localStorageData) {
+      week.map((data) => {
+        const { hours, minutes } = data.hour;
+        totalHours += parseInt(hours) || 0;
+        totalMinutes += parseInt(minutes) || 0;
+      });
 
-    totalHours += Math.floor(totalMinutes / 60);
-    totalMinutes = totalMinutes % 60;
+      totalHours += Math.floor(totalMinutes / 60);
+      totalMinutes = totalMinutes % 60;
 
-    const formattedTime = `${totalHours}h ${totalMinutes}m`;
-    return formattedTime;
+      const formattedTime = `${totalHours}h ${totalMinutes}m`;
+      return formattedTime;
+    }
   };
 
   // Crear una nueva instancia de jsPDF
   const pdf = new jsPDF();
+  const customName = `Rpt_${year}_Wk${numWeek}.pdf`;
 
   // Establecer las propiedades del documento
   pdf.setProperties({
-    title: "Week Hours",
+    title: `Week Hours`,
   });
 
   // Título de la página
@@ -58,9 +63,9 @@ export const PdfGenerator = () => {
   const pageHeight = pdf.internal.pageSize.height;
 
   // Iterar sobre los días de la semana
-  localStorageData.forEach((dayData) => {
+  week.forEach((data) => {
     // Verificar si el contenido cabe en la página actual
-    const dayHeight = calculateDayHeight(pdf, dayData);
+    const dayHeight = calculateDayHeight(pdf, data);
     if (yPosition + dayHeight > pageHeight - 30) {
       pdf.addPage(); // Añadir nueva página si no cabe
       yPosition = 15; // Reiniciar la posición Y para la nueva página
@@ -68,21 +73,21 @@ export const PdfGenerator = () => {
 
     pdf.setFontSize(16);
     pdf.setFont("Newsreader", "bold");
-    pdf.text(dayData.day, 13, yPosition); // Escribir el nombre del día
+    pdf.text(data.day, 13, yPosition); // Escribir el nombre del día
 
     //DATE
     pdf.setFontSize(13);
     pdf.setFont("custom", "normal");
-    pdf.text("NOV/11/2024", 50, yPosition);
+    pdf.text(formateMDY(data.date), 50, yPosition);
 
     // HOURS FOR DAY
     pdf.setFont("Newsreader", "bold");
     pdf.setFontSize(11);
     pdf.text("Hours: ", 130, yPosition);
     pdf.setFontSize(14);
-    const hoursText = `${dayData.hour.hours}h:${
-      dayData.hour.minutes < 10 ? "0" : ""
-    }${dayData.hour.minutes}m`;
+    const hoursText = `${data.hour.hours}h:${
+      data.hour.minutes < 10 ? "0" : ""
+    }${data.hour.minutes}m`;
     pdf.text(hoursText, 145, yPosition);
 
     // Descripción
@@ -91,14 +96,13 @@ export const PdfGenerator = () => {
     pdf.setFontSize(10);
     pdf.setFont("custom", "normal");
 
-    const longText = dayData.description || "No description available."; // Si no hay descripción, poner texto predeterminado
+    const longText = data.description || "No description available.";
 
     // Ajustar el texto largo para que encaje en varias líneas
     const textLines = pdf.splitTextToSize(longText, 180); // Ajusta el 180 según el ancho de la página
 
     // Calcular el alto del texto para la descripción
     const textHeight = pdf.getTextDimensions(textLines).h;
-    console.log(textHeight);
 
     // Imprimir el texto en múltiples líneas
     pdf.text(textLines, 13, yPosition + 15);
@@ -127,11 +131,9 @@ export const PdfGenerator = () => {
     pdf.text(`Page ${i} of ${totalPages}`, 185, pageHeight - 10);
   }
 
-  // Guardar el PDF
-  pdf.save("Week_Hours.pdf");
-
   // Abrir el PDF en una nueva pestaña
   const pdfDataUri = pdf.output("datauristring");
+
   const newTab = window.open();
   newTab?.document.write(
     `<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`
@@ -141,18 +143,18 @@ export const PdfGenerator = () => {
 // Función para calcular el alto total del día, incluyendo la descripción
 const calculateDayHeight = (pdf, dayData) => {
   pdf.setFontSize(16);
-  const dayHeight = 10; // Aproximadamente la altura del título del día
+  const dayHeight = 10;
 
   pdf.setFontSize(11);
-  const hoursHeight = 10; // Aproximadamente la altura para las horas
+  const hoursHeight = 10;
 
   pdf.setFontSize(15);
-  const descriptionHeight = 9; // Aproximadamente la altura para la etiqueta de descripción
+  const descriptionHeight = 9;
 
   // Ajustar el texto largo para que encaje en varias líneas
   const longText = dayData.description || "No description available.";
   const textLines = pdf.splitTextToSize(longText, 180);
   const textHeight = pdf.getTextDimensions(textLines).h;
 
-  return dayHeight + hoursHeight + descriptionHeight + textHeight + 20; // Espacio extra para márgenes y separación
+  return dayHeight + hoursHeight + descriptionHeight + textHeight + 20;
 };

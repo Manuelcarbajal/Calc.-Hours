@@ -36,7 +36,7 @@ const InputHours = ({ day, data, setData }) => {
   const onChange = (e, id) => {
     const { value, name } = e.target;
 
-    const newData = data.map((day) => {
+    const newData = (data?.week || []).map((day) => {
       if (day.id === id) {
         return {
           ...day,
@@ -50,9 +50,12 @@ const InputHours = ({ day, data, setData }) => {
       return day;
     });
 
-    localStorage.setItem("table-key", JSON.stringify(newData));
+    localStorage.setItem(
+      "table-key",
+      JSON.stringify({ ...data, week: newData })
+    );
 
-    setData(newData);
+    setData({ ...data, week: newData });
   };
 
   return (
